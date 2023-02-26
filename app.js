@@ -15,7 +15,18 @@ function requestListener(request, response) {
   }
 
   if (URL === '/message' && method === 'POST') {
-    fs.writeFileSync('message.txt', 'test');
+    const body = [];
+  
+    request.on('data', (chunk) => {
+      body.push(chunk);
+    });
+    request.on('end', () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split('=')[1];
+
+      fs.writeFileSync('message.txt', message);
+    });
+
     response.writeHead(302, {
       'Location': '/'
     });
