@@ -24,14 +24,13 @@ function requestListener(request, response) {
       const parsedBody = Buffer.concat(body).toString();
       const message = parsedBody.split('=')[1];
 
-      fs.writeFileSync('message.txt', message);
+      fs.writeFile('message.txt', message, (error) => {
+        response.writeHead(302, {
+          'Location': '/'
+        });
+        return response.end();
+      });
     });
-
-    response.writeHead(302, {
-      'Location': '/'
-    });
-
-    return response.end();
   }
 
   response.setHeader('Content-Type', 'text/html');
