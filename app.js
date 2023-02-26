@@ -1,7 +1,9 @@
 const http = require('http');
+const fs = require('fs');
 
 function requestListener(request, response) {
   const URL = request.url;
+  const method = request.method;
 
   if (URL === '/') {
     response.write('<html>');
@@ -11,6 +13,16 @@ function requestListener(request, response) {
 
     return response.end();
   }
+
+  if (URL === '/message' && method === 'POST') {
+    fs.writeFileSync('message.txt', 'test');
+    response.writeHead(302, {
+      'Location': '/'
+    });
+
+    return response.end();
+  }
+
   response.setHeader('Content-Type', 'text/html');
   response.write('<html>');
   response.write('<head><title>My first page</title></head>');
